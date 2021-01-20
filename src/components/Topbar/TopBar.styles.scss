@@ -1,0 +1,75 @@
+$font-color-primary: #c19d60;
+
+.topbar-container {
+	position: absolute;
+	width: 100%;
+	height: 1rem;
+	left: 0;
+	top: 0;
+}
+
+.top-bar {
+	margin: 0 auto;
+	position: relative;
+	width: 80%;
+	height: 100%;
+	background-color: transparent;
+	z-index: 5;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+	padding: 1rem;
+	font-family: "Playfair Display", serif;
+	font-size: 13px;
+	font-weight: 700;
+	background-color: rgba($color: #000000, $alpha: 0.2);
+	border-radius: 50px;
+	margin-top: 0.5rem;
+
+	&__contacts {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		flex-direction: row;
+		padding: 0.5rem;
+
+		&--phone,
+		&--email {
+			padding-left: 1rem;
+		}
+
+		.call-now,
+		.email {
+			color: $font-color-primary;
+		}
+		.phone-number,
+		.restaurent-email {
+			color: #fff;
+		}
+		// &--email {
+		//   .email {
+		//     color: $font-color-primary;
+		//   }
+		// }
+		// &--phone .call-now {
+		// 	color: $font-color-primary;
+		// }
+	}
+	&__language {
+		color: #fff;
+	}
+
+	&__language .english {
+		color: $font-color-primary;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.top-bar {
+		width: 100%;
+		height: 0;
+		display: none;
+		padding: 0;
+	}
+}

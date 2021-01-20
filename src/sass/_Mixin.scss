@@ -1,0 +1,38 @@
+@mixin flex-center {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+@mixin flex-space-between {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+@mixin customFlex($property, $value) {
+	display: flex;
+	#{$property}: $value;
+}
+
+@mixin heading-primary {
+	font-size: 2rem;
+	font-weight: 700;
+	padding: 1rem;
+}
+
+@mixin heading-secondary {
+	font-size: 3rem;
+	font-weight: 700;
+	padding: 1rem;
+}
+
+@mixin heading($value) {
+	font-weight: 700;
+	padding: 1rem;
+	@if $value == primary {
+		font-size: 2rem;
+	} @else if $value == secondary {
+		font-size: 3.5rem;
+	}
+}

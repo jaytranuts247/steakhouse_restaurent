@@ -1,20 +1,19 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import styled from "styled-components";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useTransform } from "framer-motion";
+import { Context } from "../../context/context";
 
-const WrappedItem = styled(motion.div)`
-	width: ${({ cardWidth }) => cardWidth}px;
+const Wrapper = styled(motion.div)`
+	position: absolute;
 	height: 100%;
+	width: ${(props) => (props.cardWidth ? props.cardWidth : 0)}px;
+	top: 0px;
+
 	padding: 0;
 	overflow: hidden;
-	position: absolute;
-	top: 0px;
-	${"" /* left: ${({ offset, new_x }) => new_x + offset}px; */}
-	& img {
-		height: 100%;
-		width: 100%;
-	}
-	&.overlay {
+	z-index: ${({ zIndex }) => zIndex};
+
+	& .overlay {
 		background-color: rgba(0, 0, 0, 0.2);
 		position: absolute;
 		top: 0;
@@ -22,36 +21,98 @@ const WrappedItem = styled(motion.div)`
 		height: 100%;
 		width: 100%;
 		padding: 0;
+		z-index: ${({ zIndex }) => zIndex + 1};
 	}
 `;
 
-const Card = ({
-	key,
-	offset,
-	transitionDuration,
-	imgNum,
-	new_x,
-	new_y,
-	cardWidth,
-	isTransition,
-}) => {
-	console.log("cardwith", cardWidth);
-	console.log("new_x", new_x);
-	console.log("isTransition", isTransition);
+const BackgroundItem = styled.div`
+	position: absolute;
+	top: 0;
+	left: -15%;
+	height: 100%;
+	width: 130%;
+	transition: ${(props) => `${props.transitionDuration}s linear `};
+	-webkit-transform: ${(props) => `${props.transitionDuration}s linear `};
+	transform: translateX(${(props) => props.offset}px);
+	-ms-transform: translateX(${(props) => props.offset}px);
+	background-image: url(${(props) => props.imageURL});
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-attachment: scroll;
+	background-position: center;
+	z-index: ${({ zIndex }) => zIndex};
+`;
+
+const Item = styled(motion.div)`
+	position: absolute;
+	top: 0;
+	left: -15%;
+	height: 100%;
+	width: 130%;
+	z-index: ${({ zIndex }) => zIndex};
+`;
+
+const Card = ({ cardId, passedChild }) => {
+	// console.log("children", passedChild); // can passed the children
+	const { state, dispatch } = useContext(Context);
+
+	const {
+		offsetPositionList,
+		initialTransitionDuration,
+		cardWidth,
+		cardPropsList,
+		isLoading,
+	} = state;
+
+	const cardProps = cardPropsList.filter((cp) => cp.id === cardId);
+	const { cardPosition, zIndex, transitionDuration } = cardProps[0] || {};
+
+	const getSrc = () => {
+		if (passedChild.props.children.type === "img") {
+			const src = `../${passedChild.props.children.props.src}`;
+			// console.log(src);
+			return src;
+		} else {
+			// console.log("NO IMG FOUND");
+		}
+	};
+
+	const offsetValue = useMotionValue(0);
+
+	// console.log("offsetValue", offsetValue.current);
+
+	const setIsLoading = () => {
+		console.log("Fire animation complete");
+		if (cardWidth && isLoading) {
+			setTimeout(() => {
+				dispatch({ type: "TOGGLE_LOADING" });
+			}, 100);
+		}
+	};
+
 	return (
-		<WrappedItem
-			animate={{ x: offset + new_x }}
+		<Wrapper
+			animate={{ x: offsetPositionList[cardPosition] }}
 			transition={{
 				ease: "easeOut",
-				duration: isTransition === true ? transitionDuration : 0,
+				duration: isLoading ? initialTransitionDuration : transitionDuration,
 			}}
-			new_x
-			new_y
-			cardWidth
+			cardWidth={cardWidth}
+			zIndex={zIndex}
+			onAnimationComplete={setIsLoading}
 		>
 			<div className="overlay"></div>
-			<img src={`../../img/${imgNum}.jpg`} alt="No photo" />
-		</WrappedItem>
+			<BackgroundItem
+				transitionDuration={
+					isLoading ? initialTransitionDuration : transitionDuration
+				}
+				offset={-0.05 * offsetPositionList[cardPosition]}
+				imageURL={getSrc}
+				zIndex={zIndex}
+			>
+				{""}
+			</BackgroundItem>
+		</Wrapper>
 	);
 };
 

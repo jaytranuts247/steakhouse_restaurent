@@ -4,6 +4,15 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.0",
+    "@styled-icons/boxicons-logos": "^10.23.0",
+    "@styled-icons/boxicons-regular": "^10.23.0",
+    "@styled-icons/boxicons-solid": "^10.23.0",
+    "@styled-icons/entypo": "^10.18.0",
+    "@styled-icons/fa-solid": "^10.23.0",
+    "@styled-icons/icomoon": "^10.18.0",
+    "@styled-icons/ionicons-outline": "^10.24.0",
+    "@styled-icons/material-rounded": "^10.23.0",
+    "@styled-icons/open-iconic": "^10.18.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -12,9 +21,13 @@
     "react-dom": "^17.0.1",
     "react-elastic-carousel": "^0.9.5",
     "react-icons": "^4.1.0",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
+    "react-spinners": "^0.9.0",
     "react-use-dimensions": "^1.2.1",
+    "resize-observer-polyfill": "^1.5.1",
     "styled-components": "^5.2.1",
+    "use-state-with-callback": "^2.0.3",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
@@ -40,5 +53,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "node-sass": "4.14.1"
   }
 }

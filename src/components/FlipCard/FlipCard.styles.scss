@@ -1,0 +1,219 @@
+@import "../../sass/color";
+@import "../../sass/components";
+
+.flip-card {
+	background-color: transparent;
+	width: 38rem;
+	height: 38rem;
+	border: none;
+	perspective: 100rem;
+}
+
+.flip-card-inner {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	transition: transform 0.8s;
+	transform-style: preserve-3d;
+	// transition: 0.9s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+	z-index: 2;
+}
+
+.flip-card-front,
+.flip-card-back {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	perspective: 1000px;
+	transition: all 0.9s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+	transform-style: preserve-3d;
+}
+
+.flip-card-front {
+	background-color: #f1f1f1;
+	color: black;
+	background-size: cover;
+
+	&::before,
+	&::after {
+		content: " ";
+		position: absolute;
+		height: 15%;
+		width: 15%;
+		z-index: 5;
+	}
+	&::before {
+		top: 2.5rem;
+		left: 2.5rem;
+		border-top: 1px dotted $color-primary;
+		border-left: 1px dotted $color-primary;
+	}
+
+	&::after {
+		bottom: 2.5rem;
+		right: 2.5rem;
+		border-right: 1px dotted $color-primary;
+		border-bottom: 1px dotted $color-primary;
+	}
+
+	&:hover {
+		transform: rotateY(180deg);
+		& ~ .flip-card-back {
+			transform: rotateY(360deg);
+		}
+	}
+	// &:hover ~ .flip-card-back {
+	// 	transform: rotateY(-180deg);
+	// }
+
+	.overlay {
+		position: absolute;
+		height: 100%;
+		width: 100%;
+		background-color: rgba($color: #000000, $alpha: 0.4);
+		z-index: 3;
+	}
+	.service-info {
+		height: 50%;
+		width: 90%;
+		z-index: 5;
+		padding-top: 2rem;
+		font-family: "Playfair Display", cursive;
+		color: #fff;
+		margin-top: 4.5rem;
+
+		#title,
+		#description {
+			font-weight: 700;
+			text-transform: uppercase;
+			padding-top: 1rem;
+		}
+		#title {
+			font-size: 2rem;
+		}
+		#description {
+			font-size: 1.4rem;
+		}
+		& > p {
+			position: absolute;
+			bottom: 2rem;
+			left: 2rem;
+			font-size: 2rem;
+		}
+	}
+}
+
+.flip-card-back {
+	flex-direction: column;
+	background-color: #303030;
+	color: white;
+	transform: rotateY(180deg);
+	padding: 3rem;
+	font-size: 1.5rem;
+	font-family: "Poppins", sans-serif;
+
+	& p {
+		margin-top: 2rem;
+	}
+
+	.three-dot-seperator span::after {
+		color: $color-primary;
+		position: absolute;
+		bottom: 3rem;
+		left: 50%;
+		transform: translateX(-50%);
+		font-size: 10px !important;
+	}
+}
+@media screen and (max-width: 1440px) {
+}
+@media screen and (max-width: 992px) {
+	.flip-card {
+		height: 30rem;
+		width: 30rem;
+	}
+	.flip-card-front {
+		.service-info {
+			#title {
+				font-size: 1.5rem;
+			}
+			#description {
+				font-size: 1.3rem;
+			}
+		}
+	}
+}
+@media screen and (max-width: 768px) {
+	.flip-card {
+		height: 23rem;
+		width: 23rem;
+	}
+	.flip-card-front {
+		&::before {
+			top: 1.8rem;
+			left: 1.8rem;
+		}
+
+		&::after {
+			bottom: 1.8rem;
+			right: 1.8rem;
+		}
+		.service-info {
+			margin-top: 2rem;
+
+			#title {
+				font-size: 1.5rem;
+			}
+			#description {
+				font-size: 1.1rem;
+			}
+			& > p {
+				font-size: 1.8rem;
+			}
+		}
+	}
+
+	.flip-card-back {
+		font-size: 1.1rem;
+	}
+}
+@media screen and (max-width: 600px) {
+	.flip-card {
+		width: 40rem;
+		height: 40rem;
+
+		margin: 2rem 0;
+	}
+	.flip-card-front {
+		&::before {
+			top: 2rem;
+			left: 2rem;
+		}
+
+		&::after {
+			bottom: 2rem;
+			right: 2rem;
+		}
+		.service-info {
+			margin-top: 9rem;
+
+			#title {
+				font-size: 2rem;
+			}
+			#description {
+				font-size: 1.4rem;
+			}
+			& > p {
+				font-size: 1.8rem;
+			}
+		}
+	}
+}

@@ -1,0 +1,51 @@
+@import "./color.scss";
+
+.dot-seperator span::after {
+	content: "\25CF\25CF\25CF\25CF\25CF\25CF";
+	color: #333;
+	font-size: 7px;
+	letter-spacing: 4px;
+	padding-top: 2rem;
+}
+
+.three-dot-seperator span::after {
+	content: "\25CF\25CF\25CF";
+	color: #333;
+	font-size: 7px;
+	letter-spacing: 4px;
+	padding-top: 2rem;
+}
+
+.bold-seperator {
+	max-width: 400px;
+	margin: 0 auto 3rem;
+	position: relative;
+	width: 100%;
+
+	&::before,
+	&::after {
+		content: " ";
+		position: absolute;
+		width: 30%;
+		height: 1px;
+		top: 50%;
+		opacity: 0.3;
+		background-color: $color-primary;
+	}
+
+	&::before {
+		left: 0;
+	}
+	&::after {
+		right: 0;
+	}
+
+	& span {
+		width: 6px;
+		height: 6px;
+		display: block;
+		background: #fff;
+		margin: 0 auto;
+		border-radius: 100%;
+	}
+}
