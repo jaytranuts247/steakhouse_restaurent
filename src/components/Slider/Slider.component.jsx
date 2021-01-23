@@ -1,135 +1,11 @@
-import React, {
-	useEffect,
-	useState,
-	useRef,
-	Fragment,
-	useLayoutEffect,
-	useMemo,
-} from "react";
+import React, { useEffect, useState, useRef, Fragment, useMemo } from "react";
 
-import styled, { css } from "styled-components";
+import { Container, SlideItem, Next, Prev } from "./Slider.styles";
 import { useStateWithCallbackLazy } from "use-state-with-callback";
 
 import Pagination from "./Pagination.component";
 
-import { LeftArrow, RightArrow } from "@styled-icons/boxicons-solid";
-import useDimensions from "./useDimensions";
-
-const Container = styled.div`
-	width: 100%;
-	height: 100%;
-	min-height: 100%;
-	position: relative;
-	display: flex;
-	align-items: center;
-	overflow: ${({ scaleWhenActive }) =>
-		scaleWhenActive ? "visible" : "hidden"};
-	box-sizing: border-box;
-	padding: 2rem 0;
-	&:before {
-		${(props) =>
-			props.showMiddleLine &&
-			css`
-				content: " ";
-				position: absolute;
-				top: 50%;
-				left: 0;
-				right: 0;
-				height: 1px;
-				border-top: 1px dotted #c19d60;
-			`}
-		${
-			"" /* content: " ";
-		position: absolute;
-		top: 50%;
-		width: 100%;
-		height: 1px;
-		border-top: 1px dotted #c19d60; */
-		}
-	}
-`;
-
-const SlideItem = styled.div`
-	position: absolute;
-	width: ${({ width }) => width}px;
-	transform: translateX(
-			${({ translate, circulateOffset }) => translate + circulateOffset}px
-		)
-		scale(
-			${({ activeIndex, id, scaleWhenActive }) =>
-				scaleWhenActive ? (activeIndex === id ? "1.1" : ".9") : "1"}
-		);
-	transition: all ${({ transition }) => transition}s ease-out;
-
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-
-	min-height: 100%;
-	height: 100%;
-
-	padding: ${({ paddingH, paddingV }) => `${paddingV}px ${paddingH}px`};
-
-	& > div {
-		background: ${({ scaleWhenActive, activeIndex, id }) => {
-			console.log("scaleWhenActive", activeIndex, id);
-			return scaleWhenActive && (activeIndex === id ? "#F9F9F9" : "");
-		}};
-	}
-	&:after {
-		color: #c19d60;
-		position: absolute;
-		content: "\\25CF\\25CF\\25CF";
-		width: 50px;
-		left: 50%;
-		bottom: ${({ dotSeperatorBottom }) => dotSeperatorBottom}px;
-		margin-left: -25px;
-		font-size: 9px;
-		letter-spacing: 4px;
-		display: flex;
-		justify-content: center;
-	}
-`;
-
-const PaginationWrap = styled.div`
-	height: auto;
-	padding-top: ${({ PagepaddingTop }) => PagepaddingTop}px;
-	padding-bottom: ${({ PagepaddingBottom }) => PagepaddingBottom}px;
-`;
-
-const Next = styled(RightArrow)`
-	position: absolute;
-	top: 50%;
-	right: ${({ arrowPosition }) => arrowPosition}px;
-	height: 2rem;
-	width: 2rem;
-	color: #c19d60;
-	cursor: pointer;
-
-	@media screen and (max-width: 768px) {
-		right: -10rem;
-	}
-	@media screen and (max-width: 600px) {
-		right: -3rem;
-	}
-`;
-
-const Prev = styled(LeftArrow)`
-	position: absolute;
-	top: 50%;
-	left: ${({ arrowPosition }) => arrowPosition}px;
-	height: 2rem;
-	width: 2rem;
-	color: #c19d60;
-	cursor: pointer;
-	@media screen and (max-width: 768px) {
-		left: -10rem;
-	}
-	@media screen and (max-width: 600px) {
-		left: -3rem;
-	}
-`;
+import { useResizeObserver } from "./useResizeObserver";
 
 const Slider = ({ children, ...restProps }) => {
 	const timeout = useMemo(() => 20, []);
@@ -137,7 +13,8 @@ const Slider = ({ children, ...restProps }) => {
 	const nextDirection = useMemo(() => 1, []);
 	const ref = useRef();
 
-	const dimensions = useDimensions(ref);
+	const dimensions = useResizeObserver(ref);
+
 	const {
 		itemToShow,
 		arrowPosition,
@@ -252,27 +129,69 @@ const Slider = ({ children, ...restProps }) => {
 			translate: -(prevState.currentIndex + direction) * prevState.slideWidth,
 		}));
 	};
+	/*
+	useEffect(() => {
+		console.log("run useEffect");
+		if (!ref.current) return;
+
+		const ro = new ResizeObserver((entries, observer) => {
+			for (const entry of entries) {
+				if (entry.target === ref.current) {
+					const { width } = entry.contentRect;
+					console.log("Element:", entry.target);
+					console.log("Width", width);
+					console.log("ItemToShow", itemToShow);
+					setContainerWidth(width, () => {
+						console.log("resizeObserver containerWidth", containerWidth);
+						setState(
+							(prevState) => ({
+								...prevState,
+								realItemToShow: itemToShow,
+							}),
+							() => {
+								console.log("state.realItemToShow", state.realItemToShow);
+							}
+						);
+					});
+					// setState((prevState) => ({
+					// 	...prevState,
+					// 	realItemToShow: itemToShow,
+					// }));
+					// handleResize();
+				}
+			}
+		});
+		ro.observe(ref.current);
+
+		return () => ro.disconnect();
+	}, []);
+	*/
 
 	useEffect(() => {
-		if (dimensions && state && setState) {
+		if (dimensions) {
 			console.log(
 				"ref sider mounted ",
+				dimensions,
 				dimensions.width / itemToShow,
 				itemToShow,
+				restProps.itemToShow,
 				ref
 			);
 
 			let realItemToShow;
 			let slideWidth_tmp;
 
-			if (dimensions.width <= 400) {
-				slideWidth_tmp = dimensions.width;
-				realItemToShow = 1;
-			} else {
-				slideWidth_tmp = dimensions.width / itemToShow;
-				realItemToShow = itemToShow;
-			}
+			slideWidth_tmp = dimensions.width / itemToShow;
+			realItemToShow = itemToShow;
 
+			console.log(
+				"setup width",
+				slideWidth_tmp,
+				realItemToShow,
+				dimensions.width,
+				restProps.itemToShow,
+				itemToShow
+			);
 			let index_array = Array.from(
 				[...children, ...children],
 				(value, idx) => idx
@@ -296,16 +215,124 @@ const Slider = ({ children, ...restProps }) => {
 					firstIdx: 0,
 					lastIdx: index_array.length - 1,
 					realItemToShow,
+					translate: 0, // to make sure item stay in place when screen resize
 				}),
 				() => {
 					console.log("then callback");
 				}
 			);
 		}
-	}, [dimensions]);
+	}, [dimensions, itemToShow]);
+
+	// useEffect(() => {
+	// 	if (containerWidth && state && setState) {
+	// 		console.log(
+	// 			"ref sider mounted ",
+	// 			containerWidth,
+	// 			containerWidth / itemToShow,
+	// 			itemToShow,
+	// 			restProps.itemToShow,
+	// 			ref
+	// 		);
+
+	// 		let realItemToShow;
+	// 		let slideWidth_tmp;
+
+	// 		slideWidth_tmp = containerWidth / itemToShow;
+	// 		realItemToShow = itemToShow;
+
+	// 		console.log(
+	// 			"setup width",
+	// 			slideWidth_tmp,
+	// 			realItemToShow,
+	// 			containerWidth,
+	// 			restProps.itemToShow,
+	// 			itemToShow
+	// 		);
+	// 		let index_array = Array.from(
+	// 			[...children, ...children],
+	// 			(value, idx) => idx
+	// 		);
+	// 		let circulateOffsetLength = index_array.length * slideWidth_tmp;
+	// 		let slides_tmp = Array.from([...children, ...children], (child, idx) => ({
+	// 			child,
+	// 			idx,
+	// 			itemTranslate: idx * slideWidth_tmp,
+	// 			circulateOffset: 0,
+	// 		}));
+
+	// 		setState(
+	// 			(prevState) => ({
+	// 				...prevState,
+	// 				slides: slides_tmp,
+	// 				indexArray: index_array,
+	// 				slideWidth: slideWidth_tmp,
+	// 				slidesLength: index_array.length,
+	// 				circulateOffsetLength,
+	// 				firstIdx: 0,
+	// 				lastIdx: index_array.length - 1,
+	// 				realItemToShow,
+	// 			}),
+	// 			() => {
+	// 				console.log("then callback");
+	// 			}
+	// 		);
+	// 	}
+	// }, [containerWidth]);
+
+	// useEffect(() => {
+	// 	if (dimensions && state && setState) {
+	// 		console.log(
+	// 			"ref sider mounted ",
+	// 			dimensions.width / itemToShow,
+	// 			itemToShow,
+	// 			ref
+	// 		);
+
+	// 		let realItemToShow;
+	// 		let slideWidth_tmp;
+
+	// 		if (dimensions.width <= 400) {
+	// 			slideWidth_tmp = dimensions.width;
+	// 			realItemToShow = 1;
+	// 		} else {
+	// 			slideWidth_tmp = dimensions.width / itemToShow;
+	// 			realItemToShow = itemToShow;
+	// 		}
+
+	// 		let index_array = Array.from(
+	// 			[...children, ...children],
+	// 			(value, idx) => idx
+	// 		);
+	// 		let circulateOffsetLength = index_array.length * slideWidth_tmp;
+	// 		let slides_tmp = Array.from([...children, ...children], (child, idx) => ({
+	// 			child,
+	// 			idx,
+	// 			itemTranslate: idx * slideWidth_tmp,
+	// 			circulateOffset: 0,
+	// 		}));
+
+	// 		setState(
+	// 			(prevState) => ({
+	// 				...prevState,
+	// 				slides: slides_tmp,
+	// 				indexArray: index_array,
+	// 				slideWidth: slideWidth_tmp,
+	// 				slidesLength: index_array.length,
+	// 				circulateOffsetLength,
+	// 				firstIdx: 0,
+	// 				lastIdx: index_array.length - 1,
+	// 				realItemToShow,
+	// 			}),
+	// 			() => {
+	// 				console.log("then callback");
+	// 			}
+	// 		);
+	// 	}
+	// }, [dimensions]);
 
 	return (
-		<>
+		<Fragment>
 			<Container
 				ref={ref}
 				scaleWhenActive={scaleWhenActive}
@@ -324,6 +351,7 @@ const Slider = ({ children, ...restProps }) => {
 						const { child, idx, itemTranslate, circulateOffset } = slide;
 						const { width, ...rest } = restProps;
 						const widthToUse = slideWidth ? slideWidth : width;
+						console.log("widthToUse", widthToUse, slideWidth, width);
 
 						return (
 							<SlideItem
@@ -360,20 +388,21 @@ const Slider = ({ children, ...restProps }) => {
 				arrowPosition={arrowPosition}
 				onClick={() => handlePagination(prevDirection)}
 			/>
-		</>
+		</Fragment>
 	);
 };
 
 Slider.defaultProps = {
 	paddingH: "20",
 	paddingV: "0",
-	width: "50%",
+	width: "50",
 	itemToShow: 2,
 	arrowPosition: -80,
 	dotSeperatorBottom: 0,
 	scaleWhenActive: false,
 	showPagination: false,
 	showMiddleLine: false,
+	transitionDelay: 0,
 };
 
 export default Slider;

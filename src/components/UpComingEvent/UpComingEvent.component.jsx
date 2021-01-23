@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 
@@ -62,6 +62,12 @@ const EventItem = styled.div`
 		text-align: center;
 		line-height: 2.4rem;
 	}
+
+	@media screen and (max-width: 600px) {
+		& > p {
+			width: 60%;
+		}
+	}
 `;
 
 const BackgroundImage = styled(motion.div)`
@@ -77,6 +83,32 @@ const BackgroundImage = styled(motion.div)`
 `;
 
 const UpComingEvent = () => {
+	const [arrowPos, setArrowPos] = useState(0);
+	const [itemToShow, setItemToShow] = useState(2);
+
+	const handleResize = () => {
+		let arrowPos = 0;
+		let itemToShow = 2;
+		if (window.innerWidth <= 600) {
+			arrowPos = 32;
+			itemToShow = 1;
+		} else if (window.innerWidth <= 768) {
+			arrowPos = 35;
+		} else if (window.innerWidth <= 992) {
+			arrowPos = 40;
+		} else if (window.innerWidth <= 1440) {
+			arrowPos = 70;
+		}
+		setItemToShow(itemToShow);
+		setArrowPos(arrowPos);
+	};
+
+	useEffect(() => {
+		handleResize();
+		window.addEventListener("resize", handleResize);
+		return () => window.addEventListener("resize", handleResize);
+	}, []);
+
 	return (
 		<section className="upcoming-event">
 			<div
@@ -93,7 +125,7 @@ const UpComingEvent = () => {
 							</div>
 						</div>
 						<div className="slider-container">
-							<Slider>
+							<Slider arrowPosition={-arrowPos} itemToShow={itemToShow}>
 								{EventList.map((eventItem, idx) => {
 									const { eventName, date, description } = eventItem;
 									return (

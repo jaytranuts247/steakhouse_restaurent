@@ -3,7 +3,8 @@
 @import "../../sass/color.scss";
 
 .chef-team {
-	height: 75vh;
+	height: 65vh;
+	min-height: 550px;
 	width: 100%;
 	background-color: #fff;
 	box-sizing: border-box;
@@ -13,8 +14,9 @@
 		margin: 0 auto;
 		height: 100%;
 		width: 60%;
-		@include customFlex(align-items, center);
+		@include customFlex(align-items, flex-start);
 		flex-direction: column;
+		justify-content: flex-start;
 		padding: 2rem 5rem;
 		position: relative;
 
@@ -22,6 +24,7 @@
 			padding: 2rem;
 			@include flex-center;
 			flex-direction: column;
+			margin: 0 auto;
 
 			& > h2 {
 				@include heading("primary");
@@ -180,11 +183,10 @@
 			flex-direction: row;
 			height: 11rem;
 			background-color: #f5f5f5;
-			margin-top: 5rem;
-			margin-bottom: 3rem;
-			position: absolute;
-			left: 12rem;
-			bottom: 8rem;
+			margin: 8rem 0 3rem 7rem;
+			position: relative;
+			// left: 12rem;
+			// bottom: 8rem;
 			& h1 {
 				font-size: 2.5rem;
 				font-weight: 700;
@@ -200,23 +202,72 @@
 
 @media screen and (max-width: 1440px) {
 	.chef-team {
+		height: auto;
 		.chef-team-container {
 			width: 90%;
+			.section-title {
+				& > h2 {
+					font-size: 1.5rem;
+					padding: 1rem 0 0.5rem;
+				}
+				& h1 {
+					font-size: 2.4rem;
+					padding: 1srem 0 1rem;
+				}
+				.dot-seperator span::after {
+					color: $color-primary;
+				}
+			}
 
 			.recipes-book {
 				padding: 0 3rem;
+				margin: 3rem 0 3rem 7rem;
+				min-width: 700px;
+				& h1 {
+					margin-right: auto;
+					font-size: 1.8rem;
+				}
 			}
 		}
 	}
 }
 @media screen and (max-width: 992px) {
 	.chef-team {
-		height: 70vh;
+		height: auto;
 		.chef-team-container {
-			width: 100%;
+			width: 92%;
+			padding: 2rem 0;
+			.section-title {
+				& > h2 {
+					font-size: 1.5rem;
+					padding: 1rem 0 0.5rem;
+				}
+				& h1 {
+					font-size: 2.4rem;
+					padding: 1srem 0 1rem;
+				}
+				.dot-seperator span::after {
+					color: $color-primary;
+				}
+			}
+
+			.intro-wrap {
+				.row {
+					padding: 2rem 0;
+					.card-wrap {
+						padding: 0 1rem;
+					}
+				}
+			}
 
 			.recipes-book {
 				padding: 0 3rem;
+				margin: 3rem 0 3rem 7rem;
+				min-width: 700px;
+				& h1 {
+					margin-right: auto;
+					font-size: 1.8rem;
+				}
 			}
 		}
 	}
@@ -229,7 +280,8 @@
 			justify-content: center;
 
 			.intro-wrap {
-				width: 60%;
+				width: 90%;
+				margin: 0 auto;
 				.row {
 					flex-wrap: wrap;
 					.card-wrap {
@@ -245,7 +297,7 @@
 				width: 90%;
 				left: 0;
 				bottom: 0;
-				margin: 3rem 0;
+				margin: 2rem auto 4rem;
 				& h1 {
 					font-size: 2rem;
 				}
@@ -261,7 +313,8 @@
 			justify-content: center;
 
 			.intro-wrap {
-				width: 80%;
+				width: 95%;
+				margin: 0 auto;
 				.row {
 					flex-wrap: wrap;
 					.card-wrap {
@@ -272,21 +325,21 @@
 			}
 
 			.recipes-book {
-				padding: 0 3rem;
+				padding: 0 2rem;
 				position: relative;
-				width: 95%;
-				left: 0;
-				bottom: 0;
-				margin: 3rem 0;
+				margin: 2rem auto 4rem auto;
+				min-width: 90%;
 				& h1 {
 					font-size: 2rem;
+					// margin-right: 2rem;
+					width: 70%;
 				}
 			}
 		}
 	}
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 425px) {
 	.chef-team {
 		height: auto;
 		.chef-team-container {

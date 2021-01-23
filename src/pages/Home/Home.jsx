@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { BrowserRouter as Router } from "react-router-dom";
@@ -91,23 +91,125 @@ const WrappedOpenTime = styled.div`
 	}
 `;
 
+const carouselInfo = [
+	{
+		id: 1,
+		title: "View Our Story",
+		description:
+			"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Praesentium, repellat",
+		imageNum: 1,
+	},
+	{
+		id: 2,
+		title: "Buy Delicious Dessert",
+		description:
+			"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Praesentium, repellat",
+		imageNum: 2,
+	},
+	{
+		id: 3,
+		title: "Explore Our Restaurent",
+		description:
+			"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Praesentium, repellat",
+		imageNum: 3,
+	},
+	{
+		id: 4,
+		title: "Explore Our Menu",
+		description:
+			"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Praesentium, repellat",
+		imageNum: 4,
+	},
+	{
+		id: 5,
+		title: "View Our Team",
+		description:
+			"Lorem ipsum dolor sit, amet consectetur adipisicing elit. Praesentium, repellat",
+		imageNum: 5,
+	},
+];
+
+const IntroItem = styled.div`
+	height: auto;
+	width: 70%;
+	z-index: 15;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	& h1 {
+		font-size: 2.4rem;
+		font-weight: 700;
+		color: #fff;
+		padding-top: 2rem;
+	}
+	& p {
+		font-size: 1.4rem;
+		font-weight: 500;
+		color: #c19d60;
+		padding: 1rem 0 2.3rem;
+		text-align: center;
+	}
+
+	& .three-dot-seperator span::after {
+		color: #c19d60;
+		font-size: 1.5rem;
+		padding-bottom: 2rem;
+	}
+`;
+
+const InitCarouselSettings = {
+	transitionDuration: 1.4,
+	startIdx: 1,
+	itemToShow: 3,
+	zIndex: 10,
+	imageToShow: [1, 2, 3, 4, 5],
+	carouselInfo,
+};
+
 const Home = () => {
-	const carouselSettings = {
-		transitionDuration: 1.4,
-		startIdx: 1,
-		itemToShow: 3,
-	};
 	const imageToShow = [1, 2, 3, 4, 5];
 
 	var servicesArray = Array.from(Array(3).keys());
+	const [carouselSettings, setCarouselSettings] = useState(
+		InitCarouselSettings
+	);
+
+	// useEffect(() => {
+	// 	const handleResize = () => {
+	// 		let itemToShow = 3;
+	// 		if (window.innerWidth <= 768) {
+	// 			itemToShow = 1;
+	// 		}
+	// 		setCarouselSettings((prevState) => ({
+	// 			...prevState,
+	// 			itemToshow: itemToShow,
+	// 		}));
+	// 	};
+
+	// 	handleResize();
+
+	// 	window.addEventListener("resize", handleResize);
+	// 	return () => window.addEventListener("resize", handleResize);
+	// }, []);
 
 	return (
 		<>
-			<Carousel settings={carouselSettings}>
-				{imageToShow.map((i) => (
-					<div key={i}>
-						<img src={`../img/${i}.jpg`} alt="No Item Found" />
-					</div>
+			<Carousel settings={InitCarouselSettings}>
+				{carouselInfo.map((cardInfo, idx) => (
+					<IntroItem key={cardInfo.id} imageNum={cardInfo.imageNum}>
+						{/* <img src={`../img/long/${i}.jpg`} alt="No Item Found" /> */}
+						<div className="three-dot-seperator">
+							<span></span>
+						</div>
+						<h1>{cardInfo.title}</h1>
+						<p>{cardInfo.description}</p>
+						<div className="bold-seperator">
+							<span></span>
+						</div>
+					</IntroItem>
 				))}
 			</Carousel>
 			<TopBar />
@@ -242,7 +344,7 @@ const Home = () => {
 					</div>
 					<div className="more-about-us">
 						<IconContext.Provider
-							value={{ style: { paddingTop: ".5rem" }, size: "1.4rem" }}
+							value={{ style: { paddingTop: ".2rem" }, size: "1.4rem" }}
 						>
 							<button className="more-about-us-btn">
 								Read More About us{" "}

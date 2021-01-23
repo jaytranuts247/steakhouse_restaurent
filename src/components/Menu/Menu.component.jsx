@@ -169,6 +169,8 @@ const Menu = () => {
 					<Button
 						content={"View Full Menu"}
 						background={"rgba(255,255,255,0.1)"}
+						paddingTop="8px"
+						marginTop="40px"
 					/>
 				</div>
 			</div>

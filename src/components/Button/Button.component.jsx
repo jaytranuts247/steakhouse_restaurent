@@ -6,10 +6,12 @@ import { IconContext } from "react-icons";
 const CustomedButton = styled.button`
 	padding: ${({ paddingTop }) => `${paddingTop} 20px ${paddingTop} 25px`};
 
-	display: flex;
-	justify-content: space-between;
+	display: inline-block;
+	${
+		"" /* justify-content: space-between;
 	align-items: center;
-	flex-direction: row;
+	flex-direction: row; */
+	}
 
 	position: relative;
 	font-family: "Playfair Display", cursive;

@@ -11,6 +11,7 @@ const useDimensions = (myRef) => {
 	useEffect(() => {
 		if (myRef.current) setDimensions(getDimensions());
 	}, [myRef]);
+
 	return dimensions;
 };
 

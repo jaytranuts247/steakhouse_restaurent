@@ -7,11 +7,12 @@ const ButtonBaseStyles = css`
 	width: 6rem;
 	height: 6rem;
 	color: white;
-	z-index: 1;
+
 	background-color: rgba(18, 18, 18, 0.4);
 	border-radius: 50%;
 	outline: none;
 	border: none;
+
 	&:hover {
 		background-color: rgba(181, 181, 181, 0.3);
 	}
@@ -20,11 +21,13 @@ const ButtonBaseStyles = css`
 export const LeftButton = styled.button`
 	${ButtonBaseStyles};
 	left: 2rem;
+	z-index: ${({ zIndex }) => zIndex + 1};
 `;
 
 export const RightButton = styled.button`
 	${ButtonBaseStyles};
 	right: 2rem;
+	z-index: ${({ zIndex }) => zIndex + 1};
 `;
 
 // * this can add variable to set size for this container

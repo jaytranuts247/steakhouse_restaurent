@@ -6,7 +6,7 @@
 .upcoming-event {
 	box-sizing: border-box;
 	width: 100%;
-	min-height: 40vh;
+	min-height: 525px;
 	height: 50vh;
 
 	font-family: "Playfair Display", sans-serif;
@@ -80,6 +80,7 @@
 					font-size: 3.5rem;
 					font-weight: 700;
 					color: #fff;
+					padding: 1rem 0 2rem;
 				}
 
 				.dot-seperator span::after {
@@ -143,8 +144,25 @@
 	.upcoming-event {
 		.column-left-wrap {
 			padding: 12rem 3.5rem;
+			.upcoming-event-container {
+				.column-text {
+					.book-now-btn {
+						margin-top: 1.8rem;
+					}
+					.section-title {
+						& h2 {
+							font-size: 1.8rem;
+						}
+						& h1 {
+							font-size: 2.5rem;
+							padding: 0.8rem 0 1.5rem;
+						}
+					}
+				}
+			}
 		}
 		.column-right-wrap {
+			min-height: 475px;
 			.store-container {
 				width: 80%;
 			}

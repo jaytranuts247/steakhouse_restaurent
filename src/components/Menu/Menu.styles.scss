@@ -1,7 +1,8 @@
 $font-color-primary: #c19d60;
 
 .special-menu {
-	height: 60vh;
+	height: 55vh;
+	min-height: 600px;
 	width: 100%;
 	position: relative;
 	display: flex;
@@ -49,6 +50,7 @@ $font-color-primary: #c19d60;
 			justify-content: center;
 			width: 100%;
 			padding: 2rem;
+			margin-bottom: 4rem;
 
 			& #offer {
 				color: $font-color-primary;
@@ -72,7 +74,8 @@ $font-color-primary: #c19d60;
 		}
 
 		& .row {
-			min-height: 40rem;
+			height: 40rem;
+			min-height: 300px;
 			width: 100%;
 			display: flex;
 			align-items: center;
@@ -181,9 +184,63 @@ $font-color-primary: #c19d60;
 
 @media screen and (max-width: 1440px) {
 	.special-menu {
-		padding-top: 2rem;
+		height: 80vh;
 		.special-menu__container {
 			width: 80%;
+
+			.special-menu__title {
+				margin-bottom: 2rem;
+				padding: 1rem 0;
+
+				& #offer {
+					font-size: 1.5rem;
+				}
+				& #specialties {
+					font-size: 2.4rem;
+				}
+			}
+
+			& .row {
+				height: auto;
+				padding: 1rem 0;
+				.column-1 {
+					min-height: 100%;
+					.hero-menu_header {
+						min-height: 90%;
+						.tab-menu {
+							.menu-category {
+								padding: 1rem;
+							}
+						}
+					}
+				}
+				.column-2 {
+					height: auto;
+					min-height: 100%;
+					.food-items-container {
+						min-height: 92%;
+						.food-item {
+							padding: 10px 0;
+							.food-name-container {
+								#food-id {
+									font-size: 1.3rem;
+								}
+								#food-name {
+									font-size: 1.5rem;
+								}
+								#price {
+									font-size: 1.3rem;
+								}
+							}
+							.food-description-container {
+								#food-description {
+									font-size: 1.3rem;
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 }
@@ -204,10 +261,12 @@ $font-color-primary: #c19d60;
 	.special-menu {
 		padding-top: 1rem;
 		height: 70vh;
+		min-height: 550px;
 		.special-menu__container {
 			width: 100%;
-			.row {
+			& .row {
 				padding: 1rem 2rem 1rem 1rem;
+				min-height: 250px;
 				.column-1 {
 					width: 28rem;
 				}
@@ -215,19 +274,27 @@ $font-color-primary: #c19d60;
 				.column-2 {
 					.food-items-container {
 						padding-left: 4rem;
+
 						.food-item {
-							font-size: 1.8rem;
-							#food-id {
-								font-size: 1.5rem;
+							font-size: 1.3rem;
+							.food-name-container {
+								#food-id {
+									font-size: 1.3rem;
+								}
+								#food-name {
+									font-size: 1.5rem;
+								}
+								#price {
+									font-size: 1.3rem;
+								}
 							}
-							#food-name {
-								font-size: 1.8rem;
+							.food-description-container {
+								padding-right: 4rem;
+								#food-description {
+									font-size: 1.3rem;
+								}
 							}
 						}
-					}
-					.food-description-container {
-						font-size: 1.5rem;
-						padding-right: 4rem;
 					}
 				}
 			}

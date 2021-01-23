@@ -7,12 +7,21 @@ import { Container, LeftButton, RightButton } from "./CarouselContainer.styled";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { IconContext } from "react-icons";
 
+import { wrap } from "../../utils/ultilities";
+
 import Card from "../Card/Card.component";
-// import WithSpinner from "../With-Spinner/WithSpinner";
+
 import Loader from "../Loader/Loader";
 
+const holdPositionOnResize = (id, cardlist = []) => {
+	if (cardlist.length !== 0 && cardlist[id].cardPosition !== null) {
+		return cardlist[id].cardPosition;
+	}
+	return id;
+};
+
 const CarouselContainer = ({ children, settings }) => {
-	console.log("CarouselContainer");
+	// console.log("CarouselContainer");
 
 	const { state, dispatch } = useContext(Context);
 
@@ -24,25 +33,32 @@ const CarouselContainer = ({ children, settings }) => {
 		isTransitionInProgress,
 		isLoading,
 		zIndex,
+		onResize,
+		cardPropsList,
+		curIdx,
+		isBreakPointChange,
 	} = state;
+
 	var ro;
 	const initResizeObserver = () => {
 		ro = new ResizeObserver((entries, observer) => {
 			for (const entry of entries) {
 				if (entry.target === document.body) {
 					const { width } = entry.contentRect;
-					console.log("Element:", entry.target);
-					console.log("Width", width);
-					dispatch({ type: "UPDATE_WINDOW_WIDTH", payload: width });
+					// console.log("Element:", entry.target);
+					// console.log("Width", width);
+					dispatch({ type: "CHANGE_TRANSITION_DURATION", payload: 0.45 });
+					dispatch({ type: "UPDATE_WINDOW_WIDTH", payload: width }); // update window width include set onResize true
 
 					return width;
 				}
 			}
 		});
-		console.log(ro);
+		// console.log(ro);
 		// ro.observe(CarouselSlider.current);
 		ro.observe(document.body);
 	};
+
 	const cardListLength = React.Children.toArray(children).length;
 
 	const UpdateInitialState = () =>
@@ -57,59 +73,113 @@ const CarouselContainer = ({ children, settings }) => {
 		UpdateInitialState();
 	}, []);
 
-	// useEffect(() => {
-	// 	initResizeObserver();
-	// 	console.log("windowWidth", windowWidth, itemToShow);
-	// }, [windowWidth]);
-
 	useEffect(() => {
 		console.log("Effect called once");
-		console.log("windowWidth2", windowWidth, itemToShow);
+		// console.log("windowWidth2", windowWidth, itemToShow);
 
 		let tempCardPropsList = [];
 		let offset = 0;
 		let tempOffSetPositionList = [];
 		let cardW;
+		let tempStartIdx = startIdx;
 
 		initResizeObserver();
-		console.log("windowWidth", windowWidth, itemToShow);
+		// console.log("windowWidth", windowWidth, itemToShow);
 		if (windowWidth !== null) {
 			cardW = parseFloat(windowWidth) / itemToShow;
-			if (windowWidth <= 768) {
+			console.log(window.innerWidth);
+			if (window.innerWidth <= 768) {
 				cardW = windowWidth;
+				tempStartIdx = Math.floor(cardListLength / 2);
 			}
 
+			console.log("tempStartIdx", tempStartIdx);
+			if (cardPropsList[0]) console.log(cardPropsList);
+
 			for (let i = 0; i < cardListLength; i++) {
-				offset = (i - startIdx) * cardW;
+				offset = (i - tempStartIdx) * cardW;
 				tempOffSetPositionList.push(offset);
+
+				console.log(
+					"holdPositionOnResize(i),",
+					i,
+					holdPositionOnResize(i, cardPropsList),
+					cardPropsList[i],
+					tempStartIdx,
+					offset
+				);
 
 				tempCardPropsList.push({
 					id: i,
-					cardPosition: i,
-					imgNum: i + 1,
+					cardPosition: holdPositionOnResize(i, cardPropsList),
+					imgNum: cardPropsList[i] ? cardPropsList[i].id + 1 : i + 1,
 					transitionDuration: transitionDuration,
 					zIndex,
 				});
 			}
 
+			if (window.innerWidth <= 768) {
+				dispatch({
+					type: "ADD_PROPS",
+					payload: {
+						cardPropsList: tempCardPropsList,
+						offsetPositionList: tempOffSetPositionList,
+						cardListLength,
+						curIdx:
+							cardPropsList.length !== 0
+								? isBreakPointChange
+									? wrap(curIdx + 1, cardListLength)
+									: curIdx
+								: 2,
+						startIdx: Math.floor(cardListLength / 2),
+					},
+				});
+			} else {
+				dispatch({
+					type: "ADD_PROPS",
+					payload: {
+						cardPropsList: tempCardPropsList,
+						offsetPositionList: tempOffSetPositionList,
+						cardListLength,
+						curIdx:
+							cardPropsList.length !== 0
+								? isBreakPointChange
+									? wrap(curIdx - 1, cardListLength)
+									: curIdx
+								: curIdx,
+						startIdx: 1,
+					},
+				});
+			}
+
+			// dispatch({
+			// 	type: "ADD_PROPS",
+			// 	payload: {
+			// 		cardPropsList: tempCardPropsList,
+			// 		offsetPositionList: tempOffSetPositionList,
+			// 		cardListLength,
+			// 		// curIdx: 1,
+			// 		// startIdx: 1,
+			// 	},
+			// });
+
 			dispatch({
-				type: "ADD_PROPS",
-				payload: {
-					cardPropsList: tempCardPropsList,
-					offsetPositionList: tempOffSetPositionList,
-					cardListLength,
-				},
+				type: "SET_ON_RESIZE",
+				payload: { onResize: false, isBreakPointChange: false },
 			});
 
 			return () => {
 				unSubscribeObserver();
 			};
 		}
-	}, [windowWidth]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [windowWidth, startIdx]);
 
 	const handleClickLeft = () => {
-		console.log("left cliked");
 		if (!isTransitionInProgress) {
+			dispatch({
+				type: "CHANGE_TRANSITION_DURATION",
+				payload: transitionDuration,
+			});
 			dispatch({ type: "SLIDE_LEFT" });
 			setTimeout(() => {
 				dispatch({ type: "SLIDE_RESET_LEFT" });
@@ -118,8 +188,11 @@ const CarouselContainer = ({ children, settings }) => {
 	};
 
 	const handleClickRight = () => {
-		console.log("right clicked");
 		if (!isTransitionInProgress) {
+			dispatch({
+				type: "CHANGE_TRANSITION_DURATION",
+				payload: transitionDuration,
+			});
 			dispatch({ type: "SLIDE_RIGHT" });
 			setTimeout(() => {
 				dispatch({ type: "SLIDE_RESET_RIGHT" });
@@ -132,13 +205,20 @@ const CarouselContainer = ({ children, settings }) => {
 			<Loader loading={isLoading} />
 			<Container>
 				{React.Children.map(children, (child, idx) => (
-					<Card key={idx} cardId={idx} passedChild={child} />
+					<Card
+						key={idx}
+						cardId={cardPropsList[idx] ? cardPropsList[idx].id : idx}
+						activeId={Math.floor(cardListLength / 2)}
+						{...settings.carouselInfo[idx]}
+					>
+						{child}
+					</Card>
 				))}
 				<IconContext.Provider value={{ className: "arrow-icon" }}>
-					<LeftButton onClick={handleClickLeft}>
+					<LeftButton zIndex={zIndex} onClick={handleClickLeft}>
 						<IoIosArrowBack />
 					</LeftButton>
-					<RightButton onClick={handleClickRight}>
+					<RightButton zIndex={zIndex} onClick={handleClickRight}>
 						<IoIosArrowForward />
 					</RightButton>
 				</IconContext.Provider>
@@ -150,9 +230,6 @@ const CarouselContainer = ({ children, settings }) => {
 export default CarouselContainer;
 
 /*
- * render children
- * change the state structure
- * change transitionDuration time onload
- * add styles to those arrow icons
+ * wait for transition finish and scale
  * setUp autoplay
  */

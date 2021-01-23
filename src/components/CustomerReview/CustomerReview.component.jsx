@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState, useLayoutEffect } from "react";
 import styled from "styled-components";
 import Slider from "../Slider/Slider.component";
 import RatingStars from "../RatingStars/RatingStars.component";
@@ -75,7 +75,7 @@ const ReviewItem = styled.div`
 	}
 `;
 
-const sliderSettings = {
+const InitSliderSettings = {
 	itemToShow: 3,
 	arrowPosition: 0,
 	dotSeperatorBottom: 20,
@@ -87,6 +87,35 @@ const sliderSettings = {
 };
 
 const CustomerReview = () => {
+	const [sliderSettings, setSliderSettings] = useState(InitSliderSettings);
+
+	useEffect(() => {
+		const handleResize = () => {
+			let paddingH;
+			let itemToShow = 3;
+			if (window.innerWidth <= 600) {
+				paddingH = 55;
+				itemToShow = 1;
+			} else if (window.innerWidth <= 768) {
+				paddingH = 60;
+				itemToShow = 1;
+			} else if (window.innerWidth <= 992) {
+				paddingH = 20;
+			} else if (window.innerWidth <= 1440) {
+				paddingH = 25;
+			}
+			console.log("handleresize customer review");
+			setSliderSettings((prevState) => ({
+				...prevState,
+				paddingH: paddingH,
+				itemToShow: itemToShow,
+			}));
+		};
+		handleResize();
+		window.addEventListener("resize", handleResize);
+		return () => window.addEventListener("resize", handleResize);
+	}, []);
+
 	return (
 		<section className="section-customer-review">
 			<div className="customer-reviews-container">
@@ -98,7 +127,7 @@ const CustomerReview = () => {
 					</div>
 				</div>
 				<div className="reviews-container">
-					<Slider {...sliderSettings}>
+					<Slider {...sliderSettings} transitionDelay={0.1}>
 						{reviewsList.map((item, idx) => {
 							return (
 								<ReviewItem key={idx}>

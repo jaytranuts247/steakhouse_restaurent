@@ -12,6 +12,9 @@ export const ContextProvider = ({ children }) => {
 	const UPDATE_WINDOW_WIDTH = "UPDATE_WINDOW_WIDTH";
 	const UPDATE_INITIAL_STATE = "UPDATE_INITIAL_STATE";
 	const TOGGLE_LOADING = "TOGGLE_LOADING";
+	const CHANGE_TRANSITION_DURATION = "CHANGE_TRANSITION_DURATION";
+	const RESET_TRANSITION_DURATION = "RESET_TRANSITION_DURATION";
+	const SET_ON_RESIZE = "SET_ON_RESIZE";
 
 	const initialState = {
 		cardPropsList: [],
@@ -27,6 +30,8 @@ export const ContextProvider = ({ children }) => {
 		itemToShow: 3,
 		isLoading: true,
 		cardListLength: null,
+		onResize: false,
+		isBreakPointChange: false,
 	};
 
 	const MoveLeftPosition = (cardPropsList, startIdx, curIdx) => {
@@ -43,11 +48,12 @@ export const ContextProvider = ({ children }) => {
 				propsItem.id ===
 				wrap(curIdx - startIdx + cardListLength - 1, cardListLength)
 			) {
+				// find the last Card id
 				console.log("move", propsItem.id);
 				return {
 					...propsItem,
 					transitionDuration: 0,
-					zIndex: -1000,
+					zIndex: -90,
 					cardPosition: wrap(propsItem.cardPosition + 1, cardListLength),
 				};
 			} else {
@@ -70,11 +76,11 @@ export const ContextProvider = ({ children }) => {
 				wrap(curIdx - startIdx, cardListLength)
 			);
 			if (propsItem.id === wrap(curIdx - startIdx, cardListLength)) {
-				console.log("move Right", propsItem.id);
+				// find the first Card id
 				return {
 					...propsItem,
 					transitionDuration: 0,
-					zIndex: -1000,
+					zIndex: -90,
 					cardPosition: wrap(propsItem.cardPosition - 1, cardListLength),
 				};
 			} else {
@@ -109,7 +115,12 @@ export const ContextProvider = ({ children }) => {
 					cardWidth:
 						action.payload <= 768
 							? action.payload
-							: parseFloat(action.payload) / state.itemToShow,
+							: Math.ceil(parseFloat(action.payload) / state.itemToShow),
+					onResize: true,
+					isBreakPointChange:
+						state.windowWidth !== null
+							? (state.windowWidth <= 768) ^ (action.payload <= 768)
+							: false,
 				};
 			case SLIDE_LEFT:
 				return {
@@ -130,7 +141,7 @@ export const ContextProvider = ({ children }) => {
 						...state.cardPropsList.map((propsItem) => ({
 							...propsItem,
 							transitionDuration: state.transitionDuration,
-							zIndex: 1,
+							zIndex: state.zIndex,
 						})),
 					],
 					curIdx: wrap(state.curIdx - 1, state.cardListLength),
@@ -155,12 +166,32 @@ export const ContextProvider = ({ children }) => {
 						...state.cardPropsList.map((propsItem) => ({
 							...propsItem,
 							transitionDuration: state.transitionDuration,
-							zIndex: 1,
+							zIndex: state.zIndex,
 						})),
 					],
 					curIdx: wrap(state.curIdx + 1, state.cardListLength),
 					isTransitionInProgress: false,
 				};
+			case CHANGE_TRANSITION_DURATION:
+			case RESET_TRANSITION_DURATION:
+				return {
+					...state,
+					cardPropsList: [
+						...state.cardPropsList.map((propsItem) => ({
+							...propsItem,
+							transitionDuration: action.payload,
+						})),
+					],
+				};
+
+			case SET_ON_RESIZE:
+				return {
+					...state,
+					...action.payload,
+					// onResize: action.payload,
+					// isBreakPointChange: false
+				};
+
 			default:
 				return initialState;
 		}

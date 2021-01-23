@@ -23,7 +23,7 @@ const LoaderOverlay = styled.div`
 const Loader = (props) => {
 	const color = "#F84AA7";
 
-	console.log("Displayed Loader", props.loading);
+	// console.log("Displayed Loader", props.loading);
 	return (
 		props.loading && (
 			<LoaderOverlay>
