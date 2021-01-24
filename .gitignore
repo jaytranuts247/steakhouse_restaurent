@@ -25,3 +25,5 @@ yarn-error.log*
 
 /HatchfulExport-All
 /Logos_ByTailorBrands
+# Local Netlify folder
+.netlify
