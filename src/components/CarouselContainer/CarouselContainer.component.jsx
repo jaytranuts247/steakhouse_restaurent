@@ -33,7 +33,6 @@ const CarouselContainer = ({ children, settings }) => {
 		isTransitionInProgress,
 		isLoading,
 		zIndex,
-		onResize,
 		cardPropsList,
 		curIdx,
 		isBreakPointChange,
@@ -74,7 +73,7 @@ const CarouselContainer = ({ children, settings }) => {
 	}, []);
 
 	useEffect(() => {
-		console.log("Effect called once");
+		// console.log("Effect called once");
 		// console.log("windowWidth2", windowWidth, itemToShow);
 
 		let tempCardPropsList = [];
@@ -87,27 +86,15 @@ const CarouselContainer = ({ children, settings }) => {
 		// console.log("windowWidth", windowWidth, itemToShow);
 		if (windowWidth !== null) {
 			cardW = parseFloat(windowWidth) / itemToShow;
-			console.log(window.innerWidth);
+			// console.log(window.innerWidth);
 			if (window.innerWidth <= 768) {
 				cardW = windowWidth;
 				tempStartIdx = Math.floor(cardListLength / 2);
 			}
 
-			console.log("tempStartIdx", tempStartIdx);
-			if (cardPropsList[0]) console.log(cardPropsList);
-
 			for (let i = 0; i < cardListLength; i++) {
 				offset = (i - tempStartIdx) * cardW;
 				tempOffSetPositionList.push(offset);
-
-				console.log(
-					"holdPositionOnResize(i),",
-					i,
-					holdPositionOnResize(i, cardPropsList),
-					cardPropsList[i],
-					tempStartIdx,
-					offset
-				);
 
 				tempCardPropsList.push({
 					id: i,

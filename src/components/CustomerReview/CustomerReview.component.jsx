@@ -104,7 +104,7 @@ const CustomerReview = () => {
 			} else if (window.innerWidth <= 1440) {
 				paddingH = 25;
 			}
-			console.log("handleresize customer review");
+			// console.log("handleresize customer review");
 			setSliderSettings((prevState) => ({
 				...prevState,
 				paddingH: paddingH,

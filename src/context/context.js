@@ -38,18 +38,11 @@ export const ContextProvider = ({ children }) => {
 		const cardListLength = cardPropsList.length;
 
 		const temp = cardPropsList.map((propsItem) => {
-			console.log(
-				"propsItem.cardPosition",
-				propsItem.id,
-				propsItem.cardPosition,
-				wrap(curIdx - startIdx + cardListLength - 1, cardListLength)
-			);
 			if (
 				propsItem.id ===
 				wrap(curIdx - startIdx + cardListLength - 1, cardListLength)
 			) {
 				// find the last Card id
-				console.log("move", propsItem.id);
 				return {
 					...propsItem,
 					transitionDuration: 0,
@@ -69,12 +62,6 @@ export const ContextProvider = ({ children }) => {
 	const MoveRightPosition = (cardPropsList, startIdx, curIdx) => {
 		const cardListLength = cardPropsList.length;
 		const temp = cardPropsList.map((propsItem) => {
-			console.log(
-				"propsItem.cardPosition Right",
-				propsItem.id,
-				propsItem.cardPosition,
-				wrap(curIdx - startIdx, cardListLength)
-			);
 			if (propsItem.id === wrap(curIdx - startIdx, cardListLength)) {
 				// find the first Card id
 				return {
@@ -103,7 +90,6 @@ export const ContextProvider = ({ children }) => {
 				};
 
 			case TOGGLE_LOADING:
-				console.log("isLoading", state.isLoading);
 				return {
 					...state,
 					isLoading: false,

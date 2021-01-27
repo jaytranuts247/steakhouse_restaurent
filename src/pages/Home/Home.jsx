@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
-import { BrowserRouter as Router } from "react-router-dom";
 import Carousel from "../../components/Carousel/Carousel.component";
 import NavBar from "../../components/NavBar/NavBar.component";
 import TopBar from "../../components/Topbar/TopBar.component";
@@ -170,12 +169,10 @@ const InitCarouselSettings = {
 };
 
 const Home = () => {
-	const imageToShow = [1, 2, 3, 4, 5];
-
 	var servicesArray = Array.from(Array(3).keys());
-	const [carouselSettings, setCarouselSettings] = useState(
-		InitCarouselSettings
-	);
+	// const [carouselSettings, setCarouselSettings] = useState(
+	// 	InitCarouselSettings
+	// );
 
 	// useEffect(() => {
 	// 	const handleResize = () => {

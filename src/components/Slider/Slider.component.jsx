@@ -46,7 +46,6 @@ const Slider = ({ children, ...restProps }) => {
 
 	const shiftIndexArray = (array, shiftCount, direction) => {
 		let arr_temp = [...array];
-		console.log("shiftIndexArray", shiftCount);
 
 		for (let index = 0; index < shiftCount; index++) {
 			if (direction === nextDirection) {
@@ -54,7 +53,6 @@ const Slider = ({ children, ...restProps }) => {
 			} else {
 				arr_temp = shiftArray(arr_temp, -1, 0);
 			}
-			console.log("shiftIndexArray", arr_temp);
 		}
 		return arr_temp;
 	};
@@ -75,7 +73,7 @@ const Slider = ({ children, ...restProps }) => {
 	};
 
 	const handlePagination = (direction) => {
-		console.log("handle Pagination");
+		// console.log("handle Pagination");
 
 		let from, to, indexToCompared;
 
@@ -111,7 +109,7 @@ const Slider = ({ children, ...restProps }) => {
 				}),
 				() => {
 					setTimeout(() => {
-						console.log("callback after set state");
+						// console.log("callback after set state");
 						setState((prevState) => ({
 							...prevState,
 							transition: 0.45,
@@ -351,7 +349,6 @@ const Slider = ({ children, ...restProps }) => {
 						const { child, idx, itemTranslate, circulateOffset } = slide;
 						const { width, ...rest } = restProps;
 						const widthToUse = slideWidth ? slideWidth : width;
-						console.log("widthToUse", widthToUse, slideWidth, width);
 
 						return (
 							<SlideItem

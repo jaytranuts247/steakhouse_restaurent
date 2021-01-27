@@ -1,11 +1,6 @@
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import "./App.scss";
-import Carousel from "./components/Carousel/Carousel.component";
-// import Carousel2 from "./components/carousel2/carousel2.component";
-// import CarouselTest from "./components/carouselTest";
 
-import NavBar from "./components/NavBar/NavBar.component";
-import TopBar from "./components/Topbar/TopBar.component";
 import Home from "./pages/Home/Home";
 import About from "./pages/About";
 import ContactUs from "./pages/ContactUs";
