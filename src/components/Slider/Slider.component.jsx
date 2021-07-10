@@ -7,10 +7,48 @@ import Pagination from "./Pagination.component";
 
 import { useResizeObserver } from "./useResizeObserver";
 
+var PREV_DIRECTION = -1;
+var NEXT_DIRECTION = 1;
+var TIME_OUT = 100;
+
+const shiftArray = (array, from, to) => {
+	let arr_temp = [...array];
+	let cutOut = arr_temp.splice(from, 1)[0];
+	arr_temp.splice(to, 0, cutOut);
+	return arr_temp;
+};
+
+const shiftIndexArray = (array, shiftCount, direction) => {
+	let arr_temp = [...array];
+
+	for (let index = 0; index < shiftCount; index++) {
+		if (direction === NEXT_DIRECTION) {
+			arr_temp = shiftArray(arr_temp, 0, arr_temp.length);
+		} else {
+			arr_temp = shiftArray(arr_temp, -1, 0);
+		}
+	}
+	return arr_temp;
+};
+
+const circulate = (state, array, direction) => {
+	const temp = state.slides.map((slide, idx) => {
+		if (array.some((item) => item === slide.idx)) {
+			return {
+				...slide,
+				circulateOffset:
+					slide.circulateOffset + direction * state.circulateOffsetLength,
+			};
+		} else {
+			return slide;
+		}
+	});
+	return temp;
+};
+
+
 const Slider = ({ children, ...restProps }) => {
-	const timeout = useMemo(() => 20, []);
-	const prevDirection = useMemo(() => -1, []);
-	const nextDirection = useMemo(() => 1, []);
+
 	const ref = useRef();
 
 	const dimensions = useResizeObserver(ref);
@@ -34,53 +72,17 @@ const Slider = ({ children, ...restProps }) => {
 		slidesLength: 0,
 		firstIdx: 0,
 		lastIdx: 0,
-		realItemToShow: 1,
+		NumberOfShowItem: 1,
 	});
-
-	const shiftArray = (array, from, to) => {
-		let arr_temp = [...array];
-		let cutOut = arr_temp.splice(from, 1)[0];
-		arr_temp.splice(to, 0, cutOut);
-		return arr_temp;
-	};
-
-	const shiftIndexArray = (array, shiftCount, direction) => {
-		let arr_temp = [...array];
-
-		for (let index = 0; index < shiftCount; index++) {
-			if (direction === nextDirection) {
-				arr_temp = shiftArray(arr_temp, 0, arr_temp.length);
-			} else {
-				arr_temp = shiftArray(arr_temp, -1, 0);
-			}
-		}
-		return arr_temp;
-	};
-
-	const circulate = (state, array, direction) => {
-		const temp = state.slides.map((slide, idx) => {
-			if (array.some((item) => item === slide.idx)) {
-				return {
-					...slide,
-					circulateOffset:
-						slide.circulateOffset + direction * state.circulateOffsetLength,
-				};
-			} else {
-				return slide;
-			}
-		});
-		return temp;
-	};
 
 	const handlePagination = (direction) => {
 		// console.log("handle Pagination");
-
 		let from, to, indexToCompared;
 
-		if (direction === nextDirection) {
+		if (direction === NEXT_DIRECTION) {
 			from = 0;
 			to = state.indexArray.length / 2;
-			indexToCompared = state.lastIdx + 1 - state.realItemToShow;
+			indexToCompared = state.lastIdx + 1 - state.NumberOfShowItem;
 		} else {
 			from = state.indexArray.length / 2;
 			to = state.indexArray.length;
@@ -117,7 +119,7 @@ const Slider = ({ children, ...restProps }) => {
 							translate:
 								-(prevState.currentIndex + direction) * prevState.slideWidth,
 						}));
-					}, timeout);
+					}, TIME_OUT);
 				}
 			);
 		}
@@ -144,16 +146,16 @@ const Slider = ({ children, ...restProps }) => {
 						setState(
 							(prevState) => ({
 								...prevState,
-								realItemToShow: itemToShow,
+								NumberOfShowItem: itemToShow,
 							}),
 							() => {
-								console.log("state.realItemToShow", state.realItemToShow);
+								console.log("state.NumberOfShowItem", state.NumberOfShowItem);
 							}
 						);
 					});
 					// setState((prevState) => ({
 					// 	...prevState,
-					// 	realItemToShow: itemToShow,
+					// 	NumberOfShowItem: itemToShow,
 					// }));
 					// handleResize();
 				}
@@ -176,16 +178,16 @@ const Slider = ({ children, ...restProps }) => {
 				ref
 			);
 
-			let realItemToShow;
+			let NumberOfShowItem;
 			let slideWidth_tmp;
 
 			slideWidth_tmp = dimensions.width / itemToShow;
-			realItemToShow = itemToShow;
+			NumberOfShowItem = itemToShow;
 
 			console.log(
 				"setup width",
 				slideWidth_tmp,
-				realItemToShow,
+				NumberOfShowItem,
 				dimensions.width,
 				restProps.itemToShow,
 				itemToShow
@@ -212,7 +214,7 @@ const Slider = ({ children, ...restProps }) => {
 					circulateOffsetLength,
 					firstIdx: 0,
 					lastIdx: index_array.length - 1,
-					realItemToShow,
+					NumberOfShowItem,
 					translate: 0, // to make sure item stay in place when screen resize
 				}),
 				() => {
@@ -233,16 +235,16 @@ const Slider = ({ children, ...restProps }) => {
 	// 			ref
 	// 		);
 
-	// 		let realItemToShow;
+	// 		let NumberOfShowItem;
 	// 		let slideWidth_tmp;
 
 	// 		slideWidth_tmp = containerWidth / itemToShow;
-	// 		realItemToShow = itemToShow;
+	// 		NumberOfShowItem = itemToShow;
 
 	// 		console.log(
 	// 			"setup width",
 	// 			slideWidth_tmp,
-	// 			realItemToShow,
+	// 			NumberOfShowItem,
 	// 			containerWidth,
 	// 			restProps.itemToShow,
 	// 			itemToShow
@@ -269,7 +271,7 @@ const Slider = ({ children, ...restProps }) => {
 	// 				circulateOffsetLength,
 	// 				firstIdx: 0,
 	// 				lastIdx: index_array.length - 1,
-	// 				realItemToShow,
+	// 				NumberOfShowItem,
 	// 			}),
 	// 			() => {
 	// 				console.log("then callback");
@@ -287,15 +289,15 @@ const Slider = ({ children, ...restProps }) => {
 	// 			ref
 	// 		);
 
-	// 		let realItemToShow;
+	// 		let NumberOfShowItem;
 	// 		let slideWidth_tmp;
 
 	// 		if (dimensions.width <= 400) {
 	// 			slideWidth_tmp = dimensions.width;
-	// 			realItemToShow = 1;
+	// 			NumberOfShowItem = 1;
 	// 		} else {
 	// 			slideWidth_tmp = dimensions.width / itemToShow;
-	// 			realItemToShow = itemToShow;
+	// 			NumberOfShowItem = itemToShow;
 	// 		}
 
 	// 		let index_array = Array.from(
@@ -320,7 +322,7 @@ const Slider = ({ children, ...restProps }) => {
 	// 				circulateOffsetLength,
 	// 				firstIdx: 0,
 	// 				lastIdx: index_array.length - 1,
-	// 				realItemToShow,
+	// 				NumberOfShowItem,
 	// 			}),
 	// 			() => {
 	// 				console.log("then callback");
@@ -344,7 +346,7 @@ const Slider = ({ children, ...restProps }) => {
 							translate,
 							currentIndex,
 							slidesLength,
-							realItemToShow,
+							NumberOfShowItem,
 						} = state;
 						const { child, idx, itemTranslate, circulateOffset } = slide;
 						const { width, ...rest } = restProps;
@@ -359,7 +361,7 @@ const Slider = ({ children, ...restProps }) => {
 								translate={itemTranslate + translate}
 								circulateOffset={circulateOffset}
 								activeIndex={
-									(currentIndex + Math.floor(realItemToShow / 2)) % slidesLength
+									(currentIndex + Math.floor(NumberOfShowItem / 2)) % slidesLength
 								}
 								{...rest}
 							>
@@ -379,11 +381,11 @@ const Slider = ({ children, ...restProps }) => {
 
 			<Next
 				arrowPosition={arrowPosition}
-				onClick={() => handlePagination(nextDirection)}
+				onClick={() => handlePagination(NEXT_DIRECTION)}
 			/>
 			<Prev
 				arrowPosition={arrowPosition}
-				onClick={() => handlePagination(prevDirection)}
+				onClick={() => handlePagination(PREV_DIRECTION)}
 			/>
 		</Fragment>
 	);
