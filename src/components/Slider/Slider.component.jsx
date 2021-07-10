@@ -6,6 +6,7 @@ import { useStateWithCallbackLazy } from "use-state-with-callback";
 import Pagination from "./Pagination.component";
 
 import { useResizeObserver } from "./useResizeObserver";
+import { wrap } from "../../utils/ultilities";
 
 var PREV_DIRECTION = -1;
 var NEXT_DIRECTION = 1;
@@ -358,12 +359,10 @@ const Slider = ({ children, ...restProps }) => {
                 transition={transition}
                 translate={itemTranslate + translate}
                 circulateOffset={circulateOffset}
-                activeIndex={
-                  (currentIndex +
-                    Math.floor(NumberOfShowItem / 2) +
-                    slidesLength) %
+                activeIndex={wrap(
+                  currentIndex + Math.floor(NumberOfShowItem / 2),
                   slidesLength
-                }
+                )}
                 {...rest}
               >
                 {child}
