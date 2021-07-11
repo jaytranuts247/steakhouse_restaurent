@@ -7,7 +7,11 @@ _Created by_ Jay Tran - [Live site](https://steakawesome.netlify.app/)
 
 # Non-Technical Overview
 This project is front end project that uses React and styled with advanced SASS to create luxirious, high-class looking website for restaurant business.  
+
+
 # Technical Overview
+
+React, SASS, Styled-Components
 
 This project focus on:
 - Make elegant UX design with advanced SASS 
