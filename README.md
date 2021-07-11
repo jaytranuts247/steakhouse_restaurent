@@ -3,7 +3,7 @@
 _Created by_ Jay Tran - [Live site](https://steakawesome.netlify.app/)
 
 ![](public/readme/steak_awesome_restaurent.gif)
-![](https://bnbconnect.s3.us-east-2.amazonaws.com/steak_awesome_restaurent+(1).gif)
+![link from AWS](https://bnbconnect.s3.us-east-2.amazonaws.com/steak_awesome_restaurent+(1).gif)
 
 
 # Non-Technical Overview
