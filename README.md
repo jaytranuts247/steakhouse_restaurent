@@ -2,7 +2,8 @@
 
 _Created by_ Jay Tran - [Live site](https://steakawesome.netlify.app/)
 
-![](public/img/steak_awesome_restaurent.gif)
+![](public/readme/steak_awesome_restaurasnt.gif)
+![](public/img/steak_awesome_restaurant.png)
 
 
 # Non-Technical Overview
